@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StyleLens AI - Discover Your Perfect Look</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0f14;
+      --bg-secondary: #111820;
+      --fg: #f0f4f8;
+      --fg-muted: #8899a6;
+      --accent: #00d4aa;
+      --accent-secondary: #ff6b6b;
+      --accent-tertiary: #ffd93d;
+      --card: rgba(17, 24, 32, 0.8);
+      --card-border: rgba(0, 212, 170, 0.15);
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
+
+    [data-theme="light"] {
+      --bg: #f8fafb;
+      --bg-secondary: #ffffff;
+      --fg: #0a0f14;
+      --fg-muted: #5a6872;
+      --card: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(0, 212, 170, 0.2);
+      --glass: rgba(0, 212, 170, 0.05);
+      --glass-border: rgba(0, 212, 170, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    .font-display {
+      font-family: 'Syne', sans-serif;
+    }
+
+    /* Animated Background */
+    .bg-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .bg-mesh::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(ellipse 600px 600px at 20% 20%, rgba(0, 212, 170, 0.15), transparent),
+        radial-gradient(ellipse 500px 500px at 80% 20%, rgba(255, 107, 107, 0.12), transparent),
+        radial-gradient(ellipse 700px 700px at 50% 80%, rgba(255, 217, 61, 0.08), transparent);
+      animation: meshMove 20s ease-in-out infinite;
+    }
+
+    [data-theme="light"] .bg-mesh::before {
+      background: 
+        radial-gradient(ellipse 600px 600px at 20% 20%, rgba(0, 212, 170, 0.2), transparent),
+        radial-gradient(ellipse 500px 500px at 80% 20%, rgba(255, 107, 107, 0.15), transparent),
+        radial-gradient(ellipse 700px 700px at 50% 80%, rgba(255, 217, 61, 0.1), transparent);
+    }
+
+    @keyframes meshMove {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(2%, 2%) rotate(1deg); }
+      50% { transform: translate(-1%, 3%) rotate(-1deg); }
+      75% { transform: translate(1%, -2%) rotate(0.5deg); }
+    }
+
+    /* Grid Pattern */
+    .grid-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-image: 
+        linear-gradient(var(--glass-border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--glass-border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.4;
+    }
+
+    /* Glassmorphism */
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+    }
+
+    .glass-card {
+      background: var(--card);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #00b894);
+      color: #0a0f14;
+      font-weight: 600;
+      padding: 14px 32px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(0, 212, 170, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--fg);
+      font-weight: 500;
+      padding: 12px 28px;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--glass);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Upload Area */
+    .upload-zone {
+      border: 2px dashed var(--card-border);
+      border-radius: 24px;
+      padding: 60px 40px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.drag-over {
+      border-color: var(--accent);
+      background: rgba(0, 212, 170, 0.05);
+    }
+
+    .upload-zone.drag-over {
+      transform: scale(1.02);
+    }
+
+    /* Scanner Animation */
+    .scanner {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      margin: 0 auto;
+    }
+
+    .scanner-ring {
+      position: absolute;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      animation: scannerPulse 2s ease-in-out infinite;
+    }
+
+    .scanner-ring:nth-child(1) {
+      inset: 0;
+      animation-delay: 0s;
+    }
+
+    .scanner-ring:nth-child(2) {
+      inset: 20px;
+      animation-delay: 0.3s;
+    }
+
+    .scanner-ring:nth-child(3) {
+      inset: 40px;
+      animation-delay: 0.6s;
+    }
+
+    @keyframes scannerPulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+
+    .scanner-line {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: scannerScan 2s ease-in-out infinite;
+    }
+
+    @keyframes scannerScan {
+      0%, 100% { top: 20%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 80%; opacity: 0; }
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      height: 4px;
+      background: var(--glass);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+      border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+
+    /* Cards */
+    .result-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-secondary), var(--accent-tertiary));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .result-card:hover::before {
+      opacity: 1;
+    }
+
+    .result-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(0, 212, 170, 0.15);
+    }
+
+    /* Confidence Chart */
+    .chart-bar {
+      height: 12px;
+      background: var(--glass);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .chart-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 1s ease;
+    }
+
+    /* Animations */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stagger-1 { transition-delay: 0.1s; }
+    .stagger-2 { transition-delay: 0.2s; }
+    .stagger-3 { transition-delay: 0.3s; }
+    .stagger-4 { transition-delay: 0.4s; }
+    .stagger-5 { transition-delay: 0.5s; }
+
+    /* Scroll Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 0;
+      transition: all 0.3s ease;
+    }
+
+    .navbar.scrolled {
+      background: var(--card);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      width: 48px;
+      height: 28px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: var(--accent);
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    [data-theme="light"] .theme-toggle::after {
+      left: 23px;
+      background: var(--accent-secondary);
+    }
+
+    /* Floating Elements */
+    .float-shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      animation: float 10s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(20px, -20px); }
+      66% { transform: translate(-10px, 10px); }
+    }
+
+    /* Image Preview */
+    .image-preview {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .image-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .image-preview::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .image-preview:hover::after {
+      opacity: 1;
+    }
+
+    /* Recommendation Card */
+    .style-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .style-card:hover {
+      transform: scale(1.03);
+      border-color: var(--accent);
+    }
+
+    .style-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: linear-gradient(135deg, rgba(0, 212, 170, 0.2), rgba(255, 107, 107, 0.2));
+    }
+
+    /* Focus States */
+    button:focus-visible,
+    input:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem !important;
+      }
+      
+      .upload-zone {
+        padding: 40px 20px;
+      }
+      
+      .scanner {
+        width: 220px;
+        height: 220px;
+      }
+    }
+
+    /* Hide scrollbar but keep functionality */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--card-border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <!-- Background -->
+  <div class="bg-mesh"></div>
+  <div class="grid-pattern"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-secondary)] flex items-center justify-center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0a0f14" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+        </div>
+        <span class="font-display font-bold text-xl">StyleLens AI</span>
+      </a>
+      
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#features" class="text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors">Features</a>
+        <a href="#how-it-works" class="text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors">How It Works</a>
+        <a href="#results" class="text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors">Results</a>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"></button>
+        <button class="btn-primary hidden sm:block" onclick="scrollToUpload()">Get Started</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center pt-20" id="hero">
+      <div class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div class="fade-up" id="heroContent">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
+              <span class="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse"></span>
+              <span class="text-sm text-[var(--fg-muted)]">Powered by Advanced AI</span>
+            </div>
+            
+            <h1 class="font-display font-extrabold text-5xl md:text-6xl lg:text-7xl leading-tight mb-6 hero-title">
+              Discover Your<br>
+              <span class="bg-gradient-to-r from-[var(--accent)] via-[var(--accent-secondary)] to-[var(--accent-tertiary)] bg-clip-text text-transparent">Perfect Look</span>
+              <br>with AI
+            </h1>
+            
+            <p class="text-xl text-[var(--fg-muted)] mb-8 max-w-lg leading-relaxed">
+              Upload your photo and get personalized hairstyle and eyeglass recommendations based on your unique face shape.
+            </p>
+            
+            <div class="flex flex-wrap gap-4">
+              <button class="btn-primary" onclick="scrollToUpload()">
+                Upload Photo
+                <svg class="inline-block ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </button>
+              <button class="btn-secondary" onclick="document.getElementById('how-it-works').scrollIntoView({behavior: 'smooth'})">
+                Learn More
+              </button>
+            </div>
+            
+            <div class="flex items-center gap-8 mt-12 pt-8 border-t border-[var(--glass-border)]">
+              <div>
+                <div class="font-display font-bold text-3xl text-[var(--accent)]">50K+</div>
+                <div class="text-sm text-[var(--fg-muted)]">Analyses Done</div>
+              </div>
+              <div>
+                <div class="font-display font-bold text-3xl text-[var(--accent-secondary)]">98%</div>
+                <div class="text-sm text-[var(--fg-muted)]">Accuracy Rate</div>
+              </div>
+              <div>
+                <div class="font-display font-bold text-3xl text-[var(--accent-tertiary)]">4.9</div>
+                <div class="text-sm text-[var(--fg-muted)]">User Rating</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Hero Graphic -->
+          <div class="relative fade-up stagger-2" id="heroGraphic">
+            <div class="relative aspect-square max-w-lg mx-auto">
+              <!-- Floating Shapes -->
+              <div class="float-shape w-64 h-64 bg-[var(--accent)] opacity-20 -top-10 -left-10"></div>
+              <div class="float-shape w-48 h-48 bg-[var(--accent-secondary)] opacity-20 bottom-10 right-0" style="animation-delay: -3s;"></div>
+              
+              <!-- Main Visual -->
+              <div class="relative glass-card rounded-3xl p-8 h-full flex items-center justify-center">
+                <div class="text-center">
+                  <div class="w-48 h-48 mx-auto mb-6 rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--accent-secondary)] opacity-20"></div>
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <svg width="200" height="200" viewBox="0 0 200 200" class="opacity-60">
+                      <defs>
+                        <linearGradient id="faceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style="stop-color:var(--accent)"/>
+                          <stop offset="100%" style="stop-color:var(--accent-secondary)"/>
+                        </linearGradient>
+                      </defs>
+                      <ellipse cx="100" cy="100" rx="60" ry="75" fill="none" stroke="url(#faceGrad)" stroke-width="2"/>
+                      <circle cx="75" cy="85" r="8" fill="url(#faceGrad)" opacity="0.5"/>
+                      <circle cx="125" cy="85" r="8" fill="url(#faceGrad)" opacity="0.5"/>
+                      <path d="M85 120 Q100 135 115 120" fill="none" stroke="url(#faceGrad)" stroke-width="2"/>
+                      <!-- Scanning lines -->
+                      <line x1="30" y1="50" x2="170" y2="50" stroke="url(#faceGrad)" stroke-width="1" opacity="0.3">
+                        <animate attributeName="y1" values="30;170;30" dur="3s" repeatCount="indefinite"/>
+                        <animate attributeName="y2" values="30;170;30" dur="3s" repeatCount="indefinite"/>
+                      </line>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+      <!-- Features Section -->
+    <section class="py-24" id="features">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16 reveal">
+          <h2 class="font-display font-bold text-4xl md:text-5xl mb-4">Advanced AI Analysis</h2>
+          <p class="text-[var(--fg-muted)] text-lg max-w-2xl mx-auto">Our sophisticated algorithms analyze multiple facial features to determine your unique face shape with exceptional accuracy.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+          
+          <!-- Card 1: Face Detection -->
+          <div class="result-card reveal relative overflow-hidden">
+            <!-- Small Accent Image (Top Right) -->
+            <div class="absolute top-6 right-6 w-14 h-14 rounded-2xl overflow-hidden border border-[var(--glass-border)] z-10">
+              <img src="images/c1i2.png" alt="Detection Detail" class="w-full h-full object-cover">
+            </div>
+
+            <!-- Main Visual Image (Left) -->
+            <div class="w-14 h-14 rounded-2xl overflow-hidden border border-[var(--glass-border)] mb-6">
+              <img src="images/c1i1.png" alt="Face Detection" class="w-full h-full object-cover">
+            </div>
+
+            <h3 class="font-display font-semibold text-xl mb-2">Face Detection</h3>
+            <p class="text-[var(--fg-muted)]">Advanced neural networks identify and map key facial landmarks with precision.</p>
+          </div>
+          
+          <!-- Card 2: Shape Analysis -->
+          <div class="result-card reveal relative overflow-hidden" style="transition-delay: 0.1s;">
+            <!-- Small Accent Image (Top Right) -->
+            <div class="absolute top-6 right-6 w-14 h-14 rounded-2xl overflow-hidden border border-[var(--glass-border)] z-10">
+              <img src="images/c2i2.png" alt="Geometry Detail" class="w-full h-full object-cover">
+            </div>
+
+            <!-- Main Visual Image (Left) -->
+            <div class="w-14 h-14 rounded-2xl overflow-hidden border border-[var(--glass-border)] mb-6">
+              <img src="images/c2i1.png" alt="Shape Analysis" class="w-full h-full object-cover">
+            </div>
+
+            <h3 class="font-display font-semibold text-xl mb-2">Shape Analysis</h3>
+            <p class="text-[var(--fg-muted)]">Multi-dimensional analysis determines your face shape from 5 distinct categories.</p>
+          </div>
+          
+          <!-- Card 3: Style Matching -->
+          <div class="result-card reveal relative overflow-hidden" style="transition-delay: 0.2s;">
+            <!-- Small Accent Image (Top Right) -->
+            <div class="absolute top-6 right-6 w-14 h-14 rounded-2xl overflow-hidden border border-[var(--glass-border)] z-10">
+              <img src="images/c3i2.png" alt="Style Icon" class="w-full h-full object-cover">
+            </div>
+
+            <!-- Main Visual Image (Left) -->
+            <div class="w-14 h-14 rounded-2xl overflow-hidden border border-[var(--glass-border)] mb-6">
+              <img src="images/c3i1.png" alt="Style Matching" class="w-full h-full object-cover">
+            </div>
+
+            <h3 class="font-display font-semibold text-xl mb-2">Style Matching</h3>
+            <p class="text-[var(--fg-muted)]">Personalized recommendations based on your unique facial proportions.</p>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+
+    <!-- Upload Section -->
+        <!-- Upload Section -->
+    <section class="py-24" id="upload-section">
+      <div class="max-w-4xl mx-auto px-6">
+        <div class="text-center mb-12 reveal">
+          <h2 class="font-display font-bold text-4xl md:text-5xl mb-4">Upload Your Photo</h2>
+          <p class="text-[var(--fg-muted)] text-lg">Start your style transformation with a simple photo upload</p>
+        </div>
+        
+        <div class="glass-card rounded-3xl p-8 reveal" id="uploadCard">
+          <!-- Upload Zone -->
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="fileInput" accept=".jpg,.jpeg,.png" class="hidden">
+            <div id="uploadContent">
+              <!-- DEBUG VERSION: White text and white icon -->
+              <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-[var(--accent)] bg-opacity-10 flex flex-col items-center justify-center">
+                 <span style="color: white; font-weight: bold; font-size: 14px;">UPLOAD</span>
+                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                   <polyline points="17 8 12 3 7 8"></polyline>
+                   <line x1="12" y1="3" x2="12" y2="15"></line>
+                 </svg>
+              </div>
+            </div>
+              <h3 class="font-display font-semibold text-xl mb-2">Drag and drop your photo here</h3>
+              <p class="text-[var(--fg-muted)] mb-4">or click to browse from your device</p>
+              <p class="text-sm text-[var(--fg-muted)]">Supports JPG, PNG, JPEG (Max 10MB)</p>
+            </div>
+            
+            <!-- Preview State -->
+            <div id="previewContent" class="hidden">
+              <div class="image-preview max-w-sm mx-auto mb-6">
+                <img id="previewImage" src="" alt="Preview">
+              </div>
+              <p class="text-[var(--fg-muted)] mb-2" id="fileName">filename.jpg</p>
+              <p class="text-sm text-[var(--fg-muted)]" id="fileSize">2.4 MB</p>
+            </div>
+          </div>
+          
+          <div class="flex flex-wrap justify-center gap-4 mt-8">
+            <button class="btn-secondary" id="clearBtn" style="display: none;" onclick="clearUpload()">
+              Clear
+            </button>
+            <button class="btn-primary" id="analyzeBtn" disabled onclick="startAnalysis()">
+              Analyze Face Shape
+              <svg class="inline-block ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loading Screen -->
+    <section class="py-24 hidden" id="loading-section">
+      <div class="max-w-2xl mx-auto px-6 text-center">
+        <div class="glass-card rounded-3xl p-12">
+          <div class="scanner mb-8">
+            <div class="scanner-ring"></div>
+            <div class="scanner-ring"></div>
+            <div class="scanner-ring"></div>
+            <div class="scanner-line"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-24 h-24 rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--accent-secondary)] opacity-30"></div>
+            </div>
+          </div>
+          
+          <h3 class="font-display font-semibold text-2xl mb-4" id="loadingText">Analyzing facial structure...</h3>
+          
+          <div class="progress-bar max-w-xs mx-auto mb-4">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+          </div>
+          
+          <p class="text-[var(--fg-muted)]" id="loadingSubtext">Initializing AI model...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="py-24 hidden" id="results-section">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="font-display font-bold text-4xl md:text-5xl mb-4">Your Style Analysis</h2>
+          <p class="text-[var(--fg-muted)] text-lg">Personalized recommendations based on your face shape</p>
+        </div>
+        
+        <!-- Face Shape Result -->
+        <div class="grid lg:grid-cols-3 gap-8 mb-12">
+          <div class="lg:col-span-1">
+            <div class="result-card h-full">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-[var(--accent)] bg-opacity-10 flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="4"></circle>
+                  </svg>
+                </div>
+                <h3 class="font-display font-semibold text-xl">Face Shape</h3>
+              </div>
+              
+              <div class="text-center py-6">
+                <div class="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--accent-secondary)] opacity-20 flex items-center justify-center">
+                  <svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="2">
+                    <ellipse cx="32" cy="32" rx="20" ry="26" id="faceShapeIcon"/>
+                  </svg>
+                </div>
+                <h4 class="font-display font-bold text-3xl mb-2" id="faceShapeResult">Oval</h4>
+                <p class="text-[var(--fg-muted)]">Confidence: <span class="text-[var(--accent)] font-semibold" id="confidenceScore">94%</span></p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Confidence Chart -->
+          <div class="lg:col-span-2">
+            <div class="result-card h-full">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-[var(--accent-secondary)] bg-opacity-10 flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                  </svg>
+                </div>
+                <h3 class="font-display font-semibold text-xl">Confidence Breakdown</h3>
+              </div>
+              
+              <div class="space-y-4" id="confidenceChart">
+                <!-- Generated by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Hairstyle Recommendations -->
+        <div class="mb-12">
+          <h3 class="font-display font-semibold text-2xl mb-6">Recommended Hairstyles</h3>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" id="hairstyleCards">
+            <!-- Generated by JS -->
+          </div>
+        </div>
+        
+        <!-- Eyeglass Recommendations -->
+        <div class="mb-12">
+          <h3 class="font-display font-semibold text-2xl mb-6">Recommended Eyeglass Frames</h3>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="eyeglassCards">
+            <!-- Generated by JS -->
+          </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap justify-center gap-4">
+          <button class="btn-secondary" onclick="downloadReport()">
+            <svg class="inline-block mr-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download Report
+          </button>
+          <button class="btn-secondary" onclick="shareResults()">
+            <svg class="inline-block mr-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+            Share Results
+          </button>
+          <button class="btn-primary" onclick="resetApp()">
+            Analyze Another Photo
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+        <!-- How It Works -->
+    <section class="py-24" id="how-it-works">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16 reveal">
+          <h2 class="font-display font-bold text-4xl md:text-5xl mb-4">How It Works</h2>
+          <p class="text-[var(--fg-muted)] text-lg max-w-2xl mx-auto">Three simple steps to discover your perfect style</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+          
+          <!-- Step 1: Upload Photo -->
+          <div class="text-center reveal">
+            <div class="w-32 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border border-[var(--glass-border)] bg-[var(--glass)]">
+              <!-- Matches step-1.png (Smartphone/Cloud) -->
+              <img src="images/upload.png" alt="Upload Photo" class="w-full h-full object-cover">
+            </div>
+            <div class="w-10 h-10 mx-auto mb-4 rounded-xl bg-[var(--accent)] flex items-center justify-center text-lg font-display font-bold text-[var(--bg)]">1</div>
+            <h3 class="font-display font-semibold text-xl mb-2">Upload Photo</h3>
+            <p class="text-[var(--fg-muted)]">Take or upload a clear front-facing photo of your face.</p>
+          </div>
+          
+          <!-- Step 2: AI Analysis -->
+          <div class="text-center reveal" style="transition-delay: 0.1s;">
+            <div class="w-32 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border border-[var(--glass-border)] bg-[var(--glass)]">
+              <!-- Matches step-2.png (3D Face/Grid) -->
+              <img src="images/analysis.png" alt="AI Analysis" class="w-full h-full object-cover">
+            </div>
+            <div class="w-10 h-10 mx-auto mb-4 rounded-xl bg-[var(--accent-secondary)] flex items-center justify-center text-lg font-display font-bold text-[var(--bg)]">2</div>
+            <h3 class="font-display font-semibold text-xl mb-2">AI Analysis</h3>
+            <p class="text-[var(--fg-muted)]">Our AI analyzes your facial features and proportions.</p>
+          </div>
+          
+          <!-- Step 3: Get Results -->
+          <div class="text-center reveal" style="transition-delay: 0.2s;">
+            <div class="w-32 h-32 mx-auto mb-6 rounded-2xl overflow-hidden border border-[var(--glass-border)] bg-[var(--glass)]">
+              <!-- Matches step-3.png (Face/Glasses) -->
+              <img src="images/result.png" alt="Get Results" class="w-full h-full object-cover">
+            </div>
+            <div class="w-10 h-10 mx-auto mb-4 rounded-xl bg-[var(--accent-tertiary)] flex items-center justify-center text-lg font-display font-bold text-[var(--bg)]">3</div>
+            <h3 class="font-display font-semibold text-xl mb-2">Get Results</h3>
+            <p class="text-[var(--fg-muted)]">Receive personalized style recommendations instantly.</p>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-12 border-t border-[var(--glass-border)]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-secondary)] flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0a0f14" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+              </svg>
+            </div>
+            <span class="font-display font-bold text-xl">StyleLens AI</span>
+          </div>
+          <p class="text-[var(--fg-muted)] text-sm">Discover your perfect look with advanced AI-powered face shape analysis.</p>
+        </div>
+        
+        <div>
+          <h4 class="font-display font-semibold mb-4">Product</h4>
+          <ul class="space-y-2 text-[var(--fg-muted)]">
+            <li><a href="#" class="hover:text-[var(--accent)] transition-colors">Features</a></li>
+            <li><a href="#" class="hover:text-[var(--accent)] transition-colors">Pricing</a></li>
+            <li><a href="#" class="hover:text-[var(--accent)] transition-colors">API</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-display font-semibold mb-4">Company</h4>
+          <ul class="space-y-2 text-[var(--fg-muted)]">
+            <li><a href="#" class="hover:text-[var(--accent)] transition-colors">About</a></li>
+            <li><a href="#" class="hover:text-[var(--accent)] transition-colors">Blog</a></li>
+            <li><a href="#" class="hover:text-[var(--accent)] transition-colors">Careers</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-display font-semibold mb-4">Legal</h4>
+          <ul class="space-y-2 text-[var(--fg-muted)]">
+            <li><a href="#" class="hover:text-[var(--accent)] transition-colors">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-[var(--accent)] transition-colors">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-[var(--accent)] transition-colors">Cookie Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="pt-8 border-t border-[var(--glass-border)] flex flex-wrap justify-between items-center gap-4">
+        <p class="text-[var(--fg-muted)] text-sm">2024 StyleLens AI. All rights reserved.</p>
+        <div class="flex gap-4">
+          <a href="#" class="w-10 h-10 rounded-xl bg-[var(--glass)] border border-[var(--glass-border)] flex items-center justify-center text-[var(--fg-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all" aria-label="Twitter">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+            </svg>
+          </a>
+          <a href="#" class="w-10 h-10 rounded-xl bg-[var(--glass)] border border-[var(--glass-border)] flex items-center justify-center text-[var(--fg-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="#" class="w-10 h-10 rounded-xl bg-[var(--glass)] border border-[var(--glass-border)] flex items-center justify-center text-[var(--fg-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-all" aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect width="4" height="12" x="2" y="9"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Data
+    const faceShapes = {
+      oval: {
+        name: 'Oval',
+        description: 'Balanced proportions with slightly wider cheekbones',
+        confidence: 94
+      },
+      round: {
+        name: 'Round',
+        description: 'Similar width and length with soft angles',
+        confidence: 3
+      },
+      square: {
+        name: 'Square',
+        description: 'Strong jawline with equal width and length',
+        confidence: 2
+      },
+      heart: {
+        name: 'Heart',
+        description: 'Wider forehead tapering to a narrow chin',
+        confidence: 1
+      },
+      oblong: {
+        name: 'Oblong',
+        description: 'Longer face with balanced width',
+        confidence: 0
+      }
+    };
+
+        const hairstyles = {
+      oval: [
+        { name: 'Textured Layers', description: 'Adds dimension and movement to your balanced features', type: 'layered' },
+        { name: 'Side-Swept Bangs', description: 'Frames your face beautifully while maintaining harmony', type: 'bangs' },
+        { name: 'Classic Bob', description: 'Clean lines that complement your natural proportions', type: 'short' },
+        { name: 'Soft Waves', description: 'Enhances your features with romantic texture', type: 'wavy' }
+      ],
+      round: [
+        { name: 'Long Layers', description: 'Elongates your face and adds vertical lines', type: 'long' },
+        { name: 'High Volume Top', description: 'Creates height to balance roundness', type: 'voluminous' },
+        { name: 'Side Part', description: 'Breaks up the symmetry and adds angles', type: 'classic' },
+        { name: 'Angled Bob', description: 'Sharp lines create the illusion of length', type: 'angled' }
+      ],
+      square: [
+        { name: 'Soft Waves', description: 'Softens strong jawline with gentle curves', type: 'wavy' },
+        { name: 'Wispy Bangs', description: 'Adds softness to angular features', type: 'bangs' },
+        { name: 'Layered Cut', description: 'Layers soften and frame the face', type: 'layered' },
+        { name: 'Side-Swept Style', description: 'Creates asymmetry to balance angles', type: 'asymmetric' }
+      ],
+      heart: [
+        { name: 'Chin-Length Bob', description: 'Adds width at the jaw to balance the forehead', type: 'short' },
+        { name: 'Side-Parted Layers', description: 'Draws attention to your eyes and cheekbones', type: 'layered' },
+        { name: 'Textured Ends', description: 'Adds volume at the bottom for balance', type: 'textured' },
+        { name: 'Curtain Bangs', description: 'Softens the forehead area beautifully', type: 'bangs' }
+      ],
+      oblong: [
+        { name: 'Full Bangs', description: 'Shortens the face and adds width', type: 'bangs' },
+        { name: 'Voluminous Waves', description: 'Adds width and creates the illusion of balance', type: 'voluminous' },
+        { name: 'Layered Medium Cut', description: 'Breaks up the length with dimension', type: 'layered' },
+        { name: 'Side-Swept Fringe', description: 'Adds horizontal interest', type: 'asymmetric' }
+      ]
+    };
+
+       const eyeglasses = {
+      oval: [
+        { name: 'Geometric Frames', description: 'Adds interesting angles to your balanced features', shape: 'geometric' },
+        { name: 'Aviator Style', description: 'Complements your natural proportions perfectly', shape: 'aviator' },
+        { name: 'Oversized Frames', description: 'Makes a bold statement while staying balanced', shape: 'oversized' }
+      ],
+      round: [
+        { name: 'Rectangular Frames', description: 'Adds angles and elongates your face shape', shape: 'rectangular' },
+        { name: 'Angular Cat-Eye', description: 'Creates lift and definition', shape: 'cateye' },
+        { name: 'Bold Square Frames', description: 'Provides contrast to soft features', shape: 'square' }
+      ],
+      square: [
+        { name: 'Round Frames', description: 'Softens strong angular features', shape: 'round' },
+        { name: 'Oval Frames', description: 'Creates gentle curves to balance your jawline', shape: 'oval' },
+        { name: 'Butterfly Style', description: 'Adds softness while making a statement', shape: 'butterfly' }
+      ],
+      heart: [
+        { name: 'Bottom-Heavy Frames', description: 'Adds width at the bottom for balance', shape: 'bottom-heavy' },
+        { name: 'Rimless Style', description: 'Light and airy, doesnt overwhelm your features', shape: 'rimless' },
+        { name: 'Round Frames', description: 'Softens the wider forehead area', shape: 'round' }
+      ],
+      oblong: [
+        { name: 'Wide Frames', description: 'Adds width to balance the length', shape: 'wide' },
+        { name: 'Deep Frames', description: 'Takes up more vertical space on the face', shape: 'deep' },
+        { name: 'Decorative Temples', description: 'Draws the eye outward, creating width', shape: 'decorative' }
+      ]
+    };
+
+    // State
+    let currentTheme = 'dark';
+    let uploadedFile = null;
+    let analysisResult = null;
+
+    // DOM Elements - Initialize after DOM is ready
+    let uploadZone, fileInput, uploadContent, previewContent, previewImage, fileName, fileSize;
+    let clearBtn, analyzeBtn, heroContent, heroGraphic;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize DOM references
+      uploadZone = document.getElementById('uploadZone');
+      fileInput = document.getElementById('fileInput');
+      uploadContent = document.getElementById('uploadContent');
+      previewContent = document.getElementById('previewContent');
+      previewImage = document.getElementById('previewImage');
+      fileName = document.getElementById('fileName');
+      fileSize = document.getElementById('fileSize');
+      clearBtn = document.getElementById('clearBtn');
+      analyzeBtn = document.getElementById('analyzeBtn');
+      heroContent = document.getElementById('heroContent');
+      heroGraphic = document.getElementById('heroGraphic');
+
+      initApp();
+    });
+
+    function initApp() {
+      // Theme
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      setTheme(savedTheme);
+
+      // Navbar scroll
+      window.addEventListener('scroll', handleScroll);
+
+      // File upload
+      setupFileUpload();
+
+      // Initial animations
+      setTimeout(() => {
+        if (heroContent) heroContent.classList.add('visible');
+        if (heroGraphic) heroGraphic.classList.add('visible');
+      }, 100);
+
+      // Scroll reveal
+      setupScrollReveal();
+    }
+
+    function setTheme(theme) {
+      currentTheme = theme;
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    }
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    });
+
+    function handleScroll() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    }
+
+    function setupFileUpload() {
+      uploadZone.addEventListener('click', () => fileInput.click());
+      
+      uploadZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadZone.classList.add('drag-over');
+      });
+
+      uploadZone.addEventListener('dragleave', () => {
+        uploadZone.classList.remove('drag-over');
+      });
+
+      uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length) handleFile(files[0]);
+      });
+
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) handleFile(e.target.files[0]);
+      });
+    }
+
+    function handleFile(file) {
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+      
+      if (!validTypes.includes(file.type)) {
+        alert('Please upload a JPG, JPEG, or PNG file.');
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be under 10MB.');
+        return;
+      }
+
+      uploadedFile = file;
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImage.src = e.target.result;
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        
+        uploadContent.classList.add('hidden');
+        previewContent.classList.remove('hidden');
+        clearBtn.style.display = 'inline-flex';
+        analyzeBtn.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function clearUpload() {
+      uploadedFile = null;
+      fileInput.value = '';
+      previewImage.src = '';
+      uploadContent.classList.remove('hidden');
+      previewContent.classList.add('hidden');
+      clearBtn.style.display = 'none';
+      analyzeBtn.disabled = true;
+    }
+
+    function scrollToUpload() {
+      document.getElementById('upload-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+        async function startAnalysis() {
+      // Show loading
+      document.getElementById('upload-section').classList.add('hidden');
+      document.getElementById('loading-section').classList.remove('hidden');
+
+      const loadingTexts = [
+        { text: 'Connecting to server...', sub: 'Initializing AI engine' },
+        { text: 'Analyzing facial structure...', sub: 'Processing image data' },
+        { text: 'Generating recommendations...', sub: 'Calculating best matches' }
+      ];
+
+      const progressFill = document.getElementById('progressFill');
+      const loadingText = document.getElementById('loadingText');
+      const loadingSubtext = document.getElementById('loadingSubtext');
+
+      // Animate loading text
+      for (let i = 0; i < loadingTexts.length; i++) {
+        loadingText.textContent = loadingTexts[i].text;
+        loadingSubtext.textContent = loadingTexts[i].sub;
+        const targetProgress = ((i + 1) / loadingTexts.length) * 100;
+        await animateProgress(progressFill, targetProgress, 800);
+      }
+
+      // Prepare data
+      const formData = new FormData();
+      formData.append('file', uploadedFile);
+
+      try {
+        // CALL YOUR BACKEND HERE
+        const response = await fetch('http://localhost:5000/predict', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) throw new Error('Server error');
+
+        const result = await response.json();
+
+        // Update global result
+        analysisResult = {
+          shape: result.face_shape.toLowerCase(),
+          confidences: result.probabilities
+        };
+
+        // Show results
+        setTimeout(() => {
+          document.getElementById('loading-section').classList.add('hidden');
+          document.getElementById('results-section').classList.remove('hidden');
+          displayResults();
+        }, 500);
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Analysis failed. Make sure Python backend is running on port 5000.');
+        resetApp();
+      }
+    }
+
+    function animateProgress(element, target, duration) {
+      return new Promise(resolve => {
+        const start = parseFloat(element.style.width) || 0;
+        const startTime = performance.now();
+        
+        function update(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          const current = start + (target - start) * easeOutCubic(progress);
+          element.style.width = current + '%';
+          
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          } else {
+            resolve();
+          }
+        }
+        
+        requestAnimationFrame(update);
+      });
+    }
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function generateConfidenceScores(primaryShape) {
+      const scores = {};
+      let remaining = 100;
+      
+      scores[primaryShape] = Math.floor(Math.random() * 15) + 85; // 85-99%
+      remaining -= scores[primaryShape];
+      
+      const otherShapes = Object.keys(faceShapes).filter(s => s !== primaryShape);
+      otherShapes.forEach((shape, index) => {
+        if (index === otherShapes.length - 1) {
+          scores[shape] = remaining;
+        } else {
+          const max = Math.min(remaining - (otherShapes.length - index - 1), Math.floor(remaining * 0.6));
+          scores[shape] = Math.floor(Math.random() * max);
+          remaining -= scores[shape];
+        }
+      });
+      
+      return scores;
+    }
+
+    function displayResults() {
+      const shape = analysisResult.shape;
+      const shapeData = faceShapes[shape];
+      
+      // Update face shape result
+      document.getElementById('faceShapeResult').textContent = shapeData.name;
+      document.getElementById('confidenceScore').textContent = analysisResult.confidences[shape] + '%';
+      
+      // Update face shape icon
+      const faceIcon = document.getElementById('faceShapeIcon');
+      const iconPaths = {
+        oval: { rx: 20, ry: 26 },
+        round: { rx: 24, ry: 24 },
+        square: { rx: 24, ry: 24 },
+        heart: { rx: 22, ry: 26 },
+        oblong: { rx: 18, ry: 28 }
+      };
+      faceIcon.setAttribute('rx', iconPaths[shape].rx);
+      faceIcon.setAttribute('ry', iconPaths[shape].ry);
+      
+      // Confidence chart
+      const chartContainer = document.getElementById('confidenceChart');
+      chartContainer.innerHTML = '';
+      
+      const colors = {
+        oval: 'var(--accent)',
+        round: 'var(--accent-secondary)',
+        square: 'var(--accent-tertiary)',
+        heart: '#a855f7',
+        oblong: '#06b6d4'
+      };
+      
+      Object.entries(analysisResult.confidences)
+        .sort((a, b) => b[1] - a[1])
+        .forEach(([shapeKey, confidence]) => {
+          const row = document.createElement('div');
+          row.className = 'flex items-center gap-4';
+          row.innerHTML = `
+            <span class="w-20 text-sm font-medium">${faceShapes[shapeKey].name}</span>
+            <div class="flex-1 chart-bar">
+              <div class="chart-fill" style="width: 0%; background: ${colors[shapeKey]};"></div>
+            </div>
+            <span class="w-12 text-sm text-right font-semibold" style="color: ${colors[shapeKey]}">${confidence}%</span>
+          `;
+          chartContainer.appendChild(row);
+          
+          // Animate
+          setTimeout(() => {
+            row.querySelector('.chart-fill').style.width = confidence + '%';
+          }, 100);
+        });
+      
+      // Hairstyle cards
+      const hairstyleContainer = document.getElementById('hairstyleCards');
+      hairstyleContainer.innerHTML = '';
+      
+      hairstyles[shape].forEach((style, index) => {
+        const card = document.createElement('div');
+        card.className = 'style-card fade-up';
+        card.style.transitionDelay = (index * 0.1) + 's';
+        card.innerHTML = `
+          <div class="h-44 bg-gradient-to-br from-[var(--accent)] to-[var(--accent-secondary)] opacity-30 flex items-center justify-center">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.6">
+              <path d="M40 10 C20 10 10 25 10 40 C10 55 20 70 40 70 C60 70 70 55 70 40 C70 25 60 10 40 10Z"/>
+              <path d="M25 35 Q40 25 55 35"/>
+              <circle cx="28" cy="42" r="4"/>
+              <circle cx="52" cy="42" r="4"/>
+              <path d="M35 55 Q40 60 45 55"/>
+            </svg>
+          </div>
+          <div class="p-4">
+            <h4 class="font-display font-semibold mb-1">${style.name}</h4>
+            <p class="text-sm text-[var(--fg-muted)]">${style.description}</p>
+          </div>
+        `;
+        hairstyleContainer.appendChild(card);
+        
+        setTimeout(() => card.classList.add('visible'), 100 + index * 100);
+      });
+      
+      // Eyeglass cards
+      const eyeglassContainer = document.getElementById('eyeglassCards');
+      eyeglassContainer.innerHTML = '';
+      
+      eyeglasses[shape].forEach((frame, index) => {
+        const card = document.createElement('div');
+        card.className = 'style-card fade-up';
+        card.style.transitionDelay = (index * 0.1) + 's';
+        card.innerHTML = `
+          <div class="h-44 bg-gradient-to-br from-[var(--accent-secondary)] to-[var(--accent-tertiary)] opacity-30 flex items-center justify-center">
+            <svg width="100" height="50" viewBox="0 0 100 50" fill="none" stroke="var(--accent-secondary)" stroke-width="2" opacity="0.6">
+              <ellipse cx="25" cy="25" rx="20" ry="18"/>
+              <ellipse cx="75" cy="25" rx="20" ry="18"/>
+              <path d="M45 25 L55 25"/>
+              <path d="M5 25 L0 20"/>
+              <path d="M95 25 L100 20"/>
+            </svg>
+          </div>
+          <div class="p-4">
+            <h4 class="font-display font-semibold mb-1">${frame.name}</h4>
+            <p class="text-sm text-[var(--fg-muted)]">${frame.description}</p>
+          </div>
+        `;
+        eyeglassContainer.appendChild(card);
+        
+        setTimeout(() => card.classList.add('visible'), 100 + index * 100);
+      });
+      
+      // Scroll to results
+      document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetApp() {
+      uploadedFile = null;
+      analysisResult = null;
+      clearUpload();
+      
+      document.getElementById('results-section').classList.add('hidden');
+      document.getElementById('upload-section').classList.remove('hidden');
+      
+      scrollToUpload();
+    }
+
+    function downloadReport() {
+      // In a real app, this would generate a PDF
+      alert('Report download started! Your personalized style analysis will be downloaded shortly.');
+    }
+
+    function shareResults() {
+      // In a real app, this would open share options
+      if (navigator.share) {
+        navigator.share({
+          title: 'My StyleLens AI Results',
+          text: `I discovered my face shape is ${faceShapes[analysisResult.shape].name}! Check out StyleLens AI for personalized style recommendations.`,
+          url: window.location.href
+        });
+      } else {
+        alert('Share link copied to clipboard!');
+      }
+    }
+
+    function setupScrollReveal() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+  </script>
+</body>
+</html>

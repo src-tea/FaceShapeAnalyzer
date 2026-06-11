@@ -1,0 +1,22 @@
+# Python
+myenv/
+__pycache__/
+*.pyc
+venv/
+env/
+.env
+DATASET/
+*.keras
+
+# Model Files (These are too large for GitHub standard)
+# If your model is small (<50MB), you can remove these lines
+*.h5
+*.pkl
+*.pth
+*.keras
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
