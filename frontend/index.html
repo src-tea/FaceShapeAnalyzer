@@ -1035,10 +1035,11 @@
 
         const hairstyles = {
       oval: [
-        { name: 'Textured Layers', description: 'Adds dimension and movement to your balanced features', type: 'layered' },
-        { name: 'Side-Swept Bangs', description: 'Frames your face beautifully while maintaining harmony', type: 'bangs' },
-        { name: 'Classic Bob', description: 'Clean lines that complement your natural proportions', type: 'short' },
-        { name: 'Soft Waves', description: 'Enhances your features with romantic texture', type: 'wavy' }
+        { name: 'Long Layers', description: 'Adds movement and dimension to your balanced shape', type: 'long-layers' },
+        { name: 'Shoulder-Length Lob', description: 'A versatile cut that highlights your cheekbones', type: 'lob' },
+        { name: 'Curtain Bangs', description: 'Frames the face softly while maintaining proportion', type: 'curtain-bangs' },
+        { name: 'Shag Cut', description: 'Adds texture and volume for a modern edge', type: 'shag' },
+        { name: 'Pixie Cut', description: 'Highlights your balanced features with a bold look', type: 'pixie' }
       ],
       round: [
         { name: 'Long Layers', description: 'Elongates your face and adds vertical lines', type: 'long' },
@@ -1340,7 +1341,7 @@
       return scores;
     }
 
-    function displayResults() {
+        function displayResults() {
       const shape = analysisResult.shape;
       const shapeData = faceShapes[shape];
       
@@ -1400,15 +1401,11 @@
         const card = document.createElement('div');
         card.className = 'style-card fade-up';
         card.style.transitionDelay = (index * 0.1) + 's';
+        
+        // UPDATED: This code now loads your actual images
         card.innerHTML = `
-          <div class="h-44 bg-gradient-to-br from-[var(--accent)] to-[var(--accent-secondary)] opacity-30 flex items-center justify-center">
-            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.6">
-              <path d="M40 10 C20 10 10 25 10 40 C10 55 20 70 40 70 C60 70 70 55 70 40 C70 25 60 10 40 10Z"/>
-              <path d="M25 35 Q40 25 55 35"/>
-              <circle cx="28" cy="42" r="4"/>
-              <circle cx="52" cy="42" r="4"/>
-              <path d="M35 55 Q40 60 45 55"/>
-            </svg>
+          <div class="h-44 overflow-hidden bg-[var(--glass)]">
+            <img src="images/hairstyles/${shape}/${style.type}.png" alt="${style.name}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
           </div>
           <div class="p-4">
             <h4 class="font-display font-semibold mb-1">${style.name}</h4>
@@ -1428,15 +1425,11 @@
         const card = document.createElement('div');
         card.className = 'style-card fade-up';
         card.style.transitionDelay = (index * 0.1) + 's';
+        
+        // UPDATED: This code now loads your actual images
         card.innerHTML = `
-          <div class="h-44 bg-gradient-to-br from-[var(--accent-secondary)] to-[var(--accent-tertiary)] opacity-30 flex items-center justify-center">
-            <svg width="100" height="50" viewBox="0 0 100 50" fill="none" stroke="var(--accent-secondary)" stroke-width="2" opacity="0.6">
-              <ellipse cx="25" cy="25" rx="20" ry="18"/>
-              <ellipse cx="75" cy="25" rx="20" ry="18"/>
-              <path d="M45 25 L55 25"/>
-              <path d="M5 25 L0 20"/>
-              <path d="M95 25 L100 20"/>
-            </svg>
+          <div class="h-44 overflow-hidden bg-[var(--glass)]">
+            <img src="images/eyeglasses/${shape}/${frame.shape}.png" alt="${frame.name}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
           </div>
           <div class="p-4">
             <h4 class="font-display font-semibold mb-1">${frame.name}</h4>
